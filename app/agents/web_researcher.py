@@ -22,3 +22,28 @@ def build_web_search_agent():
         is required.
         """
     )
+
+def web_research_node(state):
+    agent = build_web_search_agent()
+
+    result = agent.invoke({
+        "messages":[
+            {
+                "role" : "user", 
+                "content" : state["task"]
+            }
+        ]
+    })
+
+    findings = result["messages"][-1].content
+
+    # Retry condition
+    if not findings:
+        return {
+            "retry_count": state["retry_count"] + 1
+        }
+
+    return {
+        "research_results" : findings 
+    }
+
