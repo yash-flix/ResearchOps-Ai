@@ -5,7 +5,6 @@ class SupervisorDecision(BaseModel):
 
     next_agent : Literal[  #restrict the orchestrator for only the given agents 
         "web_researcher",
-        "rag_researcher",
         "analyst",
         "writer",
         "reviewer",

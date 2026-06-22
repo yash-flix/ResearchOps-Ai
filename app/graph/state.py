@@ -20,3 +20,5 @@ class GraphState(TypedDict):
     retry_count: int
 
     approved: bool
+
+    report_version: int
