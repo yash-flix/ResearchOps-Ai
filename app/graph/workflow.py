@@ -1,0 +1,78 @@
+from langgraph.graph import StateGraph , START , END
+
+from app.graph.state import GraphState
+
+#import nodes 
+from app.agents.supervisor import supervisor_node
+from app.agents.web_researcher import web_researcher_node
+from app.agents.analyst import analyst_node
+from app.agents.writer import writer_node
+from app.agents.reviewer import reviewer_node
+
+# Import routers 
+from app.graph.router import (
+    supervisor_router
+)
+
+workflow = StateGraph(GraphState)
+
+# required nodes in the workflow 
+workflow.add_node(
+    "supervisor" , 
+    supervisor_node
+)
+
+workflow.add_node(
+    "web_researcher" ,
+    web_researcher_node
+)
+
+workflow.add_node(
+    "analyst",
+    analyst_node
+)
+
+workflow.add_node(
+    "writer",
+    writer_node
+)
+
+workflow.add_node(
+    "reviewer",
+    reviewer_node
+)
+
+#edges of the graph/workflow
+workflow.add_edge(
+    START,
+    "supervisor"
+)
+
+workflow.add_conditional_edges(
+    "supervisor",
+    supervisor_router,
+    {
+        "web_researcher": "web_researcher",
+        "analyst": "analyst",
+        "writer": "writer",
+        "reviewer": "reviewer",
+        "__end__": END
+    }
+)
+
+workflow.add_edge(
+    "web_researcher",
+    "supervisor"
+)
+
+workflow.add_edge(
+    "analyst",
+    "supervisor"
+)
+
+workflow.add_edge(
+    "reviewer",
+    "supervisor"
+)
+
+graph = workflow.compile()

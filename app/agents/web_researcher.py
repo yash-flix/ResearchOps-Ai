@@ -23,7 +23,7 @@ def build_web_search_agent():
         """
     )
 
-def web_research_node(state) -> dict:
+def web_researcher_node(state) -> dict:
     agent = build_web_search_agent()
 
     result = agent.invoke({
