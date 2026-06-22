@@ -1,0 +1,11 @@
+langgraph
+langchain
+langchain-groq
+chromadb
+fastapi
+uvicorn
+python-dotenv
+tavily-python
+langsmith
+pydantic
+langchain-community
