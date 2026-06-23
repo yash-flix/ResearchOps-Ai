@@ -59,17 +59,7 @@ def supervisor_node(state : GraphState):
     prompt = build_supervisor_prompt(state)
     decision = structured_llm.invoke(prompt)
 
-    tokens = (
-    decision
-    .response_metadata
-    .get("token_usage", {})
-    .get("total_tokens", 0)
-)
 
     return {
-         "token_usage": {
-        **state["token_usage"],
-        "supevisor": tokens
-         },
         "next_agent" : decision.next_agent
     }

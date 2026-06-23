@@ -8,7 +8,7 @@ class GraphState(TypedDict):
     report: str
 
     review_feedback: str
-    evaluation_results: EvaluationState
+    evaluation_results:  NotRequired[EvaluationState]
 
     approved: bool
     retry_count: int
@@ -19,7 +19,7 @@ class GraphState(TypedDict):
     started_at: str
     finished_at: str
     duration_seconds: float
-    
+
     token_usage: dict
 
     report_version: int

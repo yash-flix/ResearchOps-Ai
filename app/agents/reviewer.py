@@ -60,12 +60,6 @@ def reviewer_node(state:GraphState)->dict:
     logger.info(
     f"Reviewer decision: approved={decision.approved}"
 )
-    tokens = (
-    decision
-    .response_metadata
-    .get("token_usage", {})
-    .get("total_tokens", 0)
-)
 
     if decision.approved:
         
@@ -81,9 +75,5 @@ def reviewer_node(state:GraphState)->dict:
     return {
             "approved" :False , 
             "review_feedback" :decision.feedback,
-            "token_usage": {
-             **state["token_usage"],
-             "reviewer": tokens
-           },
             "next_agent": "supervisor"
         }
