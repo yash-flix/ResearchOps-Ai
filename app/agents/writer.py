@@ -1,5 +1,6 @@
 from app.graph.state import GraphState
 from app.llm.factory import get_llm
+from langsmith import traceable
 
 llm = get_llm()
 
@@ -45,7 +46,7 @@ Requirements:
 - Do not invent facts
 - Base conclusions only on the provided information
 """
-
+@traceable(name="writer")
 def writer_node(state:GraphState)->dict:
     prompt = build_writer_prompt(
         task = state["task"],

@@ -1,4 +1,4 @@
-from typing import TypedDict , Any 
+from typing import TypedDict , Any , NotRequired
 from app.graph.evaluation_state import EvaluationState
 
 class GraphState(TypedDict):
@@ -13,3 +13,4 @@ class GraphState(TypedDict):
     approved: bool
     retry_count: int
     next_agent: str
+    error: NotRequired[str]

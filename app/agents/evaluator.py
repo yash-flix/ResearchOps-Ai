@@ -1,16 +1,14 @@
 from app.graph.state import GraphState
 from app.llm.factory import get_llm
+from app.models.evaluation_models import EvaluationResult
+from app.config.constants import PASSING_SCORE 
+from app.config.logger import logger
+from langsmith import traceable
 
-from app.models.evaluation_models import (
-    EvaluationResult
-)
 
-def build_evaluation_prompt(
-    task: str,
-    report: str
-):
 
-   return f"""
+def build_evaluation_prompt(task: str, report: str) -> str:
+    return f"""
 You are an expert AI evaluation judge.
 
 Original Task:
@@ -50,37 +48,38 @@ evaluation_llm = llm.with_structured_output(
     EvaluationResult
 )
 
-def evaluator_node(state:GraphState)->dict:
+@traceable(name="evaluator")
+def evaluator_node(state: GraphState) -> dict:
     prompt = build_evaluation_prompt(
-    task=state["task"],
-    report=state["report"]
-)
-    
+        task=state["task"],
+        report=state["report"]
+    )
+
     evaluation = evaluation_llm.invoke(prompt)
 
+    logger.info(
+    f"Evaluator score={evaluation.overall_score}"
+)
+
+    scores = {
+        "research_score": evaluation.research_score,
+        "analysis_score": evaluation.analysis_score,
+        "report_score": evaluation.report_score,
+        "faithfulness_score": evaluation.faithfulness_score,
+        "completeness_score": evaluation.completeness_score,
+        "overall_score": evaluation.overall_score,
+        "reasoning": evaluation.reasoning
+    }
+
+    if evaluation.overall_score >= PASSING_SCORE:
+        return {
+            "evaluation_results": scores,
+            "next_agent": "done"
+        }
+
     return {
-    "evaluation_results": {
-        "research_score":
-            evaluation.research_score,
-
-        "analysis_score":
-            evaluation.analysis_score,
-
-        "report_score":
-            evaluation.report_score,
-
-        "faithfulness_score":
-            evaluation.faithfulness_score,
-
-        "completeness_score":
-            evaluation.completeness_score,
-
-        "overall_score":
-            evaluation.overall_score,
-
-        "reasoning":
-            evaluation.reasoning
-    },
-
-    "next_agent": "supervisor"
-}
+        "evaluation_results": scores,
+        "review_feedback": evaluation.reasoning,
+        "approved": False,
+        "next_agent": "writer"
+    }

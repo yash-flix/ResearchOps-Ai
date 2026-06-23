@@ -1,5 +1,6 @@
 from app.graph.state import GraphState
 from app.llm.factory import get_llm
+from langsmith import traceable
 
 llm = get_llm()
 
@@ -30,7 +31,7 @@ Provide:
 Focus on actionable insights.
 """
 
-
+@traceable(name="analyst")
 def analyst_node(
     state: GraphState
 ) -> dict:

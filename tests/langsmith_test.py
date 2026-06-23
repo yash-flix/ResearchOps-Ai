@@ -1,4 +1,5 @@
 from app.graph.workflow import graph
+from app.config.export import save_report
 
 result = graph.invoke(
     {
@@ -18,5 +19,5 @@ result = graph.invoke(
         }
     }
 )
-
+save_report(result)
 print(result)

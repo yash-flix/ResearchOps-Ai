@@ -1,10 +1,13 @@
 from langgraph.prebuilt import create_react_agent
 from app.llm.factory import get_llm
 from app.tools.web_search import web_search 
+from langsmith import traceable
+
+llm = get_llm()
+
 
 def build_web_search_agent():
-    llm = get_llm()
-
+   
     return create_react_agent(
         model = llm, 
         tools=[web_search],
@@ -48,12 +51,21 @@ def build_web_search_agent():
          "next_agent": "supervisor"
     }
 
+@traceable(name="web_researcher")
 def web_researcher_node(state):
-    result = web_search.invoke(
+    raw_results = web_search.invoke(
         {"query": state["task"]}
     )
+    summary = llm.invoke(
+    f"""
+    Summarize these search results.
+
+    Results:
+    {raw_results}
+    """
+)
 
     return {
-        "research_results": result,
-        "next_agent": "supervisor"
-    }
+    "research_results": summary.content ,
+     "next_agent": "supervisor"
+}

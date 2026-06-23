@@ -5,6 +5,8 @@ from app.models.review_models import (
 )
 
 from app.graph.state import GraphState
+from app.config.logger import logger
+from langsmith import traceable
 
 
 def build_review_prompt(task:str , report :str):
@@ -44,12 +46,20 @@ review_llm = llm.with_structured_output(
     ReviewDecision
 )
 
+
+@traceable(name="reviewer")
 def reviewer_node(state:GraphState)->dict:
+
+    
     prompt = build_review_prompt(
         task = state["task"],
         report = state["report"] 
         )
     decision = review_llm.invoke(prompt)
+
+    logger.info(
+    f"Reviewer decision: approved={decision.approved}"
+)
 
     if decision.approved:
         

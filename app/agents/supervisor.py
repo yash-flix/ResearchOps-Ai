@@ -1,6 +1,7 @@
 from app.llm.factory import get_llm
 from app.models.output_models import SupervisorDecision
 from app.graph.state import GraphState
+from langsmith import traceable
 
 llm = get_llm()
 
@@ -53,6 +54,7 @@ Evaluation Available:
    → done
     """
 
+@traceable(name="supervisor")
 def supervisor_node(state : GraphState):
     prompt = build_supervisor_prompt(state)
     decision = structured_llm.invoke(prompt)
