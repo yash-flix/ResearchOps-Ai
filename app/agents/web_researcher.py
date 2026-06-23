@@ -64,8 +64,18 @@ def web_researcher_node(state):
     {raw_results}
     """
 )
+    tokens = (
+    summary
+    .response_metadata
+    .get("token_usage", {})
+    .get("total_tokens", 0)
+)
 
     return {
     "research_results": summary.content ,
+    "token_usage": {
+        **state["token_usage"],
+        "web_researcher": tokens
+    },
      "next_agent": "supervisor"
 }

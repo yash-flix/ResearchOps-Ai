@@ -60,6 +60,13 @@ def evaluator_node(state: GraphState) -> dict:
     logger.info(
     f"Evaluator score={evaluation.overall_score}"
 )
+    
+    tokens = (
+    evaluation
+    .response_metadata
+    .get("token_usage", {})
+    .get("total_tokens", 0)
+)
 
     scores = {
         "research_score": evaluation.research_score,
@@ -81,5 +88,9 @@ def evaluator_node(state: GraphState) -> dict:
         "evaluation_results": scores,
         "review_feedback": evaluation.reasoning,
         "approved": False,
+         "token_usage": {
+        **state["token_usage"],
+        "evaluator": tokens
+    },
         "next_agent": "writer"
     }

@@ -43,8 +43,20 @@ def analyst_node(
 
     analysis = llm.invoke(prompt)
 
+    tokens = (
+    analysis
+    .response_metadata
+    .get("token_usage", {})
+    .get("total_tokens", 0)
+)
+
     return {
         "analysis_results":
-            analysis.content , 
+            analysis.content ,  
+
+         "token_usage": {
+        **state["token_usage"],
+        "analyst": tokens
+    },
          "next_agent": "supervisor"
     }

@@ -56,8 +56,19 @@ def writer_node(state:GraphState)->dict:
             
     )
     result = llm.invoke(prompt)
+    
+    tokens = (
+    result
+    .response_metadata
+    .get("token_usage", {})
+    .get("total_tokens", 0)
+)
 
     return {
         "report" : result.content ,
+        "token_usage": {
+        **state["token_usage"],
+        "writer": tokens
+    },
         "next_agent" : "supervisor"
     }

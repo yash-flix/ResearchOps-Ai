@@ -19,6 +19,7 @@ class GraphState(TypedDict):
     started_at: str
     finished_at: str
     duration_seconds: float
+    
     token_usage: dict
 
     report_version: int
