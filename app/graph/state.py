@@ -22,3 +22,5 @@ class GraphState(TypedDict):
     approved: bool
 
     report_version: int
+
+    review_iterations: int

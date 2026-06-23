@@ -3,7 +3,7 @@ from app.llm.factory import get_llm
 
 llm = get_llm()
 
-def build_writer_prompt(task:str , research_results:str , analysis_results:str)->str:
+def build_writer_prompt(task:str , research_results:str , analysis_results:str , review_feedback: str)->str:
     return f"""
 You are a senior business consultant.
 
@@ -17,6 +17,9 @@ Research Findings:
 
 Analysis:
 {analysis_results}
+
+Review Feedback:
+{review_feedback}
 
 Create a professional report using the following structure:
 
@@ -47,7 +50,8 @@ def writer_node(state:GraphState)->dict:
     prompt = build_writer_prompt(
         task = state["task"],
         research_results=state["research_results"],
-        analysis_results=state["analysis_results"]
+        analysis_results=state["analysis_results"] ,
+            
     )
     result = llm.invoke(prompt)
 

@@ -61,5 +61,5 @@ def reviewer_node(state:GraphState)->dict:
     return {
             "approved" :False , 
             "review_feedback" :decision.feedback,
-            "next_agent": "writer"
+            "next_agent": "supervisor"
         }

@@ -2,6 +2,8 @@ from langgraph.graph import StateGraph , START , END
 
 from app.graph.state import GraphState
 
+from app.memory.checkpointer import memory
+
 #import nodes 
 from app.agents.supervisor import supervisor_node
 from app.agents.web_researcher import web_researcher_node
@@ -75,4 +77,4 @@ workflow.add_edge(
     "supervisor"
 )
 
-graph = workflow.compile()
+graph = workflow.compile(checkpointer = memory )

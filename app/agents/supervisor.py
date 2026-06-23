@@ -30,6 +30,9 @@ def build_supervisor_prompt(state:GraphState):
     Approved:
     {state["approved"]}
 
+    Review Feedback:
+    {state["review_feedback"]}
+
     Routing Rules:
 
     1. If research does not exist ->
@@ -46,6 +49,8 @@ def build_supervisor_prompt(state:GraphState):
 
     5. If approved ->
        done
+
+    6. If report exists and approved == False and review_feedback exists → writer
     """
 
 def supervisor_node(state : GraphState):
