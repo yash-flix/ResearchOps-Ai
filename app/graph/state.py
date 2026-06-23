@@ -24,3 +24,5 @@ class GraphState(TypedDict):
     report_version: int
 
     review_iterations: int
+
+    evaluation_results: dict
