@@ -11,6 +11,7 @@ from app.agents.analyst import analyst_node
 from app.agents.writer import writer_node
 from app.agents.reviewer import reviewer_node
 from app.agents.evaluator import evaluator_node 
+from app.agents.initializer import initializer_node
 
 # Import routers 
 from app.graph.router import (
@@ -48,10 +49,19 @@ workflow.add_node(
     "evaluator",
     evaluator_node
 )
+workflow.add_node(
+    "initializer",
+    initializer_node
+)
 
 #edges of the graph/workflow
 workflow.add_edge(
     START,
+    "initializer"
+)
+
+workflow.add_edge(
+    "initializer",
     "supervisor"
 )
 

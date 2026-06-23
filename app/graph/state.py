@@ -14,3 +14,12 @@ class GraphState(TypedDict):
     retry_count: int
     next_agent: str
     error: NotRequired[str]
+
+    execution_id: str
+    started_at: str
+    finished_at: str
+    duration_seconds: float
+    token_usage: dict
+
+    report_version: int
+    review_iterations: int
