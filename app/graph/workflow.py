@@ -10,6 +10,7 @@ from app.agents.web_researcher import web_researcher_node
 from app.agents.analyst import analyst_node
 from app.agents.writer import writer_node
 from app.agents.reviewer import reviewer_node
+from app.agents.evaluator import evaluator_node 
 
 # Import routers 
 from app.graph.router import (
@@ -43,6 +44,10 @@ workflow.add_node(
     "reviewer",
     reviewer_node
 )
+workflow.add_node(
+    "evaluator",
+    evaluator_node
+)
 
 #edges of the graph/workflow
 workflow.add_edge(
@@ -58,6 +63,7 @@ workflow.add_conditional_edges(
         "analyst": "analyst",
         "writer": "writer",
         "reviewer": "reviewer",
+        "evaluator": "evaluator",
         "__end__": END
     }
 )
@@ -71,9 +77,18 @@ workflow.add_edge(
     "analyst",
     "supervisor"
 )
+workflow.add_edge(
+    "writer",
+    "supervisor"
+)
 
 workflow.add_edge(
     "reviewer",
+    "supervisor"
+)
+
+workflow.add_edge(
+    "evaluator",
     "supervisor"
 )
 

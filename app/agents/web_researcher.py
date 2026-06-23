@@ -23,7 +23,7 @@ def build_web_search_agent():
         """
     )
 
-def web_researcher_node(state) -> dict:
+#def web_researcher_node(state) -> dict:
     agent = build_web_search_agent()
 
     result = agent.invoke({
@@ -48,3 +48,12 @@ def web_researcher_node(state) -> dict:
          "next_agent": "supervisor"
     }
 
+def web_researcher_node(state):
+    result = web_search.invoke(
+        {"query": state["task"]}
+    )
+
+    return {
+        "research_results": result,
+        "next_agent": "supervisor"
+    }

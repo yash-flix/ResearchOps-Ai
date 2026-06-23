@@ -9,3 +9,4 @@ tavily-python
 langsmith
 pydantic
 langchain-community
+langchain-tavily

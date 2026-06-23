@@ -8,6 +8,7 @@ def supervisor_router(
     "analyst",
     "writer",
     "reviewer",
+    "evaluator",
     "__end__"
 ]:
     next_agent = state["next_agent"]

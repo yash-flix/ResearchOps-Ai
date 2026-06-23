@@ -19,38 +19,38 @@ def build_supervisor_prompt(state:GraphState):
     {state["task"]}
 
     Research Available:
-    {bool(state["research_results"])}
+{bool(state.get("research_results"))}
 
-    Analysis Available:
-    {bool(state["analysis_results"])}
+Analysis Available:
+{bool(state.get("analysis_results"))}
 
-    Report Available:
-    {bool(state["report"])}
+Report Available:
+{bool(state.get("report"))}
 
-    Approved:
-    {state["approved"]}
+Review Feedback:
+{state.get("review_feedback", "")}
 
-    Review Feedback:
-    {state["review_feedback"]}
+Evaluation Available:
+{bool(state.get("evaluation_results"))}
 
-    Routing Rules:
+ Routing Rules:
+1. No research
+   → web_researcher
 
-    1. If research does not exist ->
-       web_researcher
+2. Research exists but no analysis
+   → analyst
 
-    2. If research exists but analysis does not ->
-       analyst
+3. Analysis exists but no report
+   → writer
 
-    3. If analysis exists but report does not ->
-       writer
+4. Report exists and not approved
+   → reviewer
 
-    4. If report exists but not approved ->
-       reviewer
+5. Approved and no evaluation
+   → evaluator
 
-    5. If approved ->
-       done
-
-    6. If report exists and approved == False and review_feedback exists → writer
+6. Approved and evaluation exists
+   → done
     """
 
 def supervisor_node(state : GraphState):

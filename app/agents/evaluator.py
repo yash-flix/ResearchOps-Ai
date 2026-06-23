@@ -7,53 +7,38 @@ from app.models.evaluation_models import (
 
 def build_evaluation_prompt(
     task: str,
-    research_results: str,
-    analysis_results: str,
     report: str
 ):
 
-    return f"""
+   return f"""
 You are an expert AI evaluation judge.
-
-Evaluate the quality of this workflow.
 
 Original Task:
 {task}
 
-Research Results:
-{research_results}
-
-Analysis Results:
-{analysis_results}
-
 Final Report:
 {report}
 
-Score each category from 0 to 10.
+Evaluate and assign scores from 0-10 for:
 
-Evaluation Criteria:
+1. Research Score
+   - Evidence of strong supporting research
 
-1. Research Quality
-   - Depth
-   - Relevance
-   - Accuracy
+2. Analysis Score
+   - Depth of reasoning and insight
 
-2. Analysis Quality
-   - Insightfulness
-   - Business Value
-   - Reasoning
+3. Report Score
+   - Structure, clarity, professionalism
 
-3. Report Quality
-   - Structure
-   - Clarity
-   - Professionalism
-
-4. Faithfulness
-   - Grounded in research
+4. Faithfulness Score
    - No unsupported claims
+   - Consistent with provided information
 
-5. Completeness
-   - Fully addresses task
+5. Completeness Score
+   - Fully addresses the task
+
+6. Overall Score
+   - Overall quality of the output
 
 Provide concise reasoning.
 """
@@ -68,8 +53,6 @@ evaluation_llm = llm.with_structured_output(
 def evaluator_node(state:GraphState)->dict:
     prompt = build_evaluation_prompt(
     task=state["task"],
-    research_results=state["research_results"],
-    analysis_results=state["analysis_results"],
     report=state["report"]
 )
     

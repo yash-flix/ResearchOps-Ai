@@ -51,6 +51,7 @@ def writer_node(state:GraphState)->dict:
         task = state["task"],
         research_results=state["research_results"],
         analysis_results=state["analysis_results"] ,
+        review_feedback=state.get("review_feedback", "")
             
     )
     result = llm.invoke(prompt)

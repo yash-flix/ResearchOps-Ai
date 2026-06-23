@@ -1,28 +1,15 @@
-# app/graph/state.py
-
-from typing import TypedDict
-
+from typing import TypedDict , Any 
+from app.graph.evaluation_state import EvaluationState
 
 class GraphState(TypedDict):
-
     task: str
-
     research_results: str
-
     analysis_results: str
-
     report: str
 
     review_feedback: str
-
-    next_agent: str
-
-    retry_count: int
+    evaluation_results: EvaluationState
 
     approved: bool
-
-    report_version: int
-
-    review_iterations: int
-
-    evaluation_results: dict
+    retry_count: int
+    next_agent: str

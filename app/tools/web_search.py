@@ -1,12 +1,10 @@
-from langchain_core.tools import tool 
-from langchain_community.tools.tavily_search import TavilySearchResults
+from langchain_core.tools import tool
+from langchain_tavily import TavilySearch
 
-@tool 
-def web_search(query:str)->str:
-    """
-    Search the web for information.
-    """
-    search = TavilySearchResults(max_results = 5)
-    result = search.invoke(query)
+search = TavilySearch(max_results=5)
 
-    return str(result)
+@tool
+def web_search(query: str) -> str:
+    """Search the web for information."""
+    results = search.invoke(query)
+    return str(results)

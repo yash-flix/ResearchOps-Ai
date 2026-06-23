@@ -8,6 +8,7 @@ class SupervisorDecision(BaseModel):
         "analyst",
         "writer",
         "reviewer",
+        "evaluator",
         "done"
     ]
     reason : str
