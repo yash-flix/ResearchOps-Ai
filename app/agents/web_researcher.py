@@ -26,30 +26,7 @@ def build_web_search_agent():
         """
     )
 
-#def web_researcher_node(state) -> dict:
-    agent = build_web_search_agent()
 
-    result = agent.invoke({
-        "messages":[
-            {
-                "role" : "user", 
-                "content" : state["task"]
-            }
-        ]
-    })
-
-    findings = result["messages"][-1].content
-
-    # Retry condition
-    if not findings:
-        return {
-            "retry_count": state["retry_count"] + 1
-        }
-
-    return {
-        "research_results" : findings ,
-         "next_agent": "supervisor"
-    }
 
 @traceable(name="web_researcher")
 def web_researcher_node(state):

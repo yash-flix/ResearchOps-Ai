@@ -76,6 +76,7 @@ def evaluator_node(state: GraphState) -> dict:
     if evaluation.overall_score >= PASSING_SCORE:
         return {
             "evaluation_results": scores,
+            "approved": True,
             "next_agent": "done"
         }
 

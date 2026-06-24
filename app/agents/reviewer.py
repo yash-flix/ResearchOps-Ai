@@ -66,10 +66,6 @@ def reviewer_node(state:GraphState)->dict:
         return {
             "approved" : True , 
             "review_feedback" :decision.feedback,
-            "token_usage": {
-            **state["token_usage"],
-             "reviewer": tokens
-          },
             "next_agent": "supervisor"
         }
     return {

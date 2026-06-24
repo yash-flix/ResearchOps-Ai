@@ -1,10 +1,16 @@
 from app.graph.state import GraphState
 from app.llm.factory import get_llm
 from langsmith import traceable
+from app.config.constants import (
+    MAX_RESEARCH_CHARS
+)
 
 llm = get_llm()
 
+
+
 def build_writer_prompt(task:str , research_results:str , analysis_results:str , review_feedback: str)->str:
+    
     return f"""
 You are a senior business consultant.
 
@@ -46,12 +52,17 @@ Requirements:
 - Do not invent facts
 - Base conclusions only on the provided information
 """
+
 @traceable(name="writer")
 def writer_node(state:GraphState)->dict:
     
+    research = str(
+    state["research_results"]
+)[:MAX_RESEARCH_CHARS]
+    
     prompt = build_writer_prompt(
         task = state["task"],
-        research_results=state["research_results"],
+        research_results=research,
         analysis_results=state["analysis_results"] ,
         review_feedback=state.get("review_feedback", "")
             
