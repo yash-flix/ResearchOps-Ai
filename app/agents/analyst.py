@@ -1,6 +1,8 @@
 from app.graph.state import GraphState
 from app.llm.factory import get_llm
 from langsmith import traceable
+from app.config.logger import logger
+from app.config.constants import MAX_RESEARCH_CHARS
 
 llm = get_llm()
 
@@ -38,12 +40,15 @@ def analyst_node(
     
     combined_research = "\n\n".join(
     state["research_results"]
-     )
+     )[:MAX_RESEARCH_CHARS]
 
     prompt = build_analysis_prompt(
         task=state["task"],
         research_results=combined_research
     )
+    logger.info(
+    f"Analyst input size: {len(combined_research)} chars"
+)
 
     analysis = llm.invoke(prompt)
 
@@ -53,6 +58,7 @@ def analyst_node(
     .get("token_usage", {})
     .get("total_tokens", 0)
 )
+    logger.info("ANALYST EXECUTED")
 
     return {
         "analysis_results":

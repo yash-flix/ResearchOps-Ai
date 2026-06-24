@@ -4,6 +4,7 @@ from langsmith import traceable
 from app.config.constants import (
     MAX_RESEARCH_CHARS
 )
+from app.config.logger import logger
 
 llm = get_llm()
 
@@ -75,6 +76,7 @@ def writer_node(state:GraphState)->dict:
     .get("token_usage", {})
     .get("total_tokens", 0)
 )
+    logger.info("WRITER EXECUTED")
 
     return {
         "report" : result.content ,

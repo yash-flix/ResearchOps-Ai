@@ -1,26 +1,15 @@
-from app.llm.factory import get_llm
+from app.llm.factory import get_fast_llm
 from app.tools.web_search import web_search
+from app.config.logger import logger
 
-llm = get_llm()
+fast_llm = get_fast_llm()
 
 
 def risks_researcher_node(state):
 
-    search_results = web_search.invoke(
-        {"query": state["task"]}
-    )
+    context = state["raw_research_context"]
 
-    if isinstance(search_results, list):
-
-        context = "\n\n".join(
-            str(result)
-            for result in search_results
-        )
-
-    else:
-        context = str(search_results)
-
-    summary = llm.invoke(
+    summary = fast_llm.invoke(
         f"""
         Research task:
         {state['task']}
@@ -37,6 +26,7 @@ def risks_researcher_node(state):
         - Counterarguments
         """
     )
+    logger.info("RISKS RESEARCHER EXECUTED")
 
     return {
         "research_results": [

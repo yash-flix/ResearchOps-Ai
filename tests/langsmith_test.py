@@ -1,9 +1,11 @@
 from app.graph.workflow import graph
 from app.config.export import save_report
+import uuid
 
 result = graph.invoke(
     {
         "task": "Research the impact of AI agents on software engineering",
+        "raw_research_context" : "" ,
         "research_results": [],
         "analysis_results": "",
         "report": "",
@@ -15,7 +17,7 @@ result = graph.invoke(
     },
     config={
         "configurable": {
-            "thread_id": "test-session"
+            "thread_id": str(uuid.uuid4())
         }
     }
 )

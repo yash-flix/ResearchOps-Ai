@@ -4,6 +4,7 @@ import operator
 
 class GraphState(TypedDict):
     task: str
+    raw_research_context : str 
     research_results: Annotated[list[str] , operator.add]
     analysis_results: str
     report: str

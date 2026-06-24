@@ -11,3 +11,8 @@ def get_llm():
     return init_chat_model(
          "groq:llama-3.3-70b-versatile"
     )
+
+def get_fast_llm():
+    return init_chat_model(
+        "groq:llama-3.1-8b-instant"
+    )

@@ -1,4 +1,4 @@
-from app.llm.factory import get_llm
+from app.llm.factory import get_fast_llm
 
 from app.models.review_models import (
     ReviewDecision
@@ -29,20 +29,19 @@ Evaluate:
 4. Actionability
 5. Professionalism
 
-If the report is acceptable:
+Return:
 
-approved = true
+approved: true or false
 
-If improvements are needed:
+feedback: concise review comments
 
-approved = false
-
-Provide concise feedback.
+Do not return routing decisions.
+Do not mention next_agent.
 """
 
-llm = get_llm()
+fast_llm = get_fast_llm()
 
-review_llm = llm.with_structured_output(
+review_llm = fast_llm.with_structured_output(
     ReviewDecision
 )
 
@@ -60,16 +59,19 @@ def reviewer_node(state:GraphState)->dict:
     logger.info(
     f"Reviewer decision: approved={decision.approved}"
 )
+    logger.info("REVIEWER EXECUTED")
 
     if decision.approved:
         
         return {
             "approved" : True , 
             "review_feedback" :decision.feedback,
+            "review_iterations": state["review_iterations"] + 1,
             "next_agent": "supervisor"
         }
     return {
             "approved" :False , 
             "review_feedback" :decision.feedback,
+            "review_iterations": state["review_iterations"] + 1,
             "next_agent": "supervisor"
         }

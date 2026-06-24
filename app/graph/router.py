@@ -9,6 +9,7 @@ MAX_RETRIES = 3
 def supervisor_router(
     state: GraphState
 ) -> Literal[
+    "research_collector",
     "planner",
     "analyst",
     "writer",

@@ -1,5 +1,5 @@
 from app.graph.state import GraphState
-from app.llm.factory import get_llm
+from app.llm.factory import get_fast_llm
 from app.models.evaluation_models import EvaluationResult
 from app.config.constants import PASSING_SCORE 
 from app.config.logger import logger
@@ -41,10 +41,9 @@ Evaluate and assign scores from 0-10 for:
 Provide concise reasoning.
 """
 
+fast_llm = get_fast_llm()
 
-llm = get_llm()
-
-evaluation_llm = llm.with_structured_output(
+evaluation_llm = fast_llm.with_structured_output(
     EvaluationResult
 )
 
@@ -72,6 +71,7 @@ def evaluator_node(state: GraphState) -> dict:
         "overall_score": evaluation.overall_score,
         "reasoning": evaluation.reasoning
     }
+    logger.info("EVALUATOR EXECUTED")
 
     if evaluation.overall_score >= PASSING_SCORE:
         return {

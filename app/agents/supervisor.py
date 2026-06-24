@@ -1,65 +1,64 @@
-from app.llm.factory import get_llm
-from app.models.output_models import SupervisorDecision
 from app.graph.state import GraphState
+from app.config.logger import logger
 from langsmith import traceable
 
-llm = get_llm()
-
-structured_llm = llm.with_structured_output(
-    SupervisorDecision
-
-)
-
-def build_supervisor_prompt(state:GraphState):
-    return f"""
-    You are a workflow supervisor.
-
-    Decide which agent should execute next.
-
-    Current Task:
-    {state["task"]}
-
-    Research Available:
-{bool(state.get("research_results"))}
-
-Analysis Available:
-{bool(state.get("analysis_results"))}
-
-Report Available:
-{bool(state.get("report"))}
-
-Review Feedback:
-{state.get("review_feedback", "")}
-
-Evaluation Available:
-{bool(state.get("evaluation_results"))}
-
- Routing Rules:
-1. No research
-   → planner
-
-2. Research exists but no analysis
-   → analyst
-
-3. Analysis exists but no report
-   → writer
-
-4. Report exists and not approved
-   → reviewer
-
-5. Approved and no evaluation
-   → evaluator
-
-6. Approved and evaluation exists
-   → done
-    """
 
 @traceable(name="supervisor")
-def supervisor_node(state : GraphState):
-    prompt = build_supervisor_prompt(state)
-    decision = structured_llm.invoke(prompt)
+def supervisor_node(state: GraphState):
 
+    if not state.get("raw_research_context"):
+        next_agent = "research_collector"
+
+    elif not state.get("research_results"):
+        next_agent = "planner"
+
+    elif not state.get("analysis_results"):
+        next_agent = "analyst"
+
+    elif not state.get("report"):
+        next_agent = "writer"
+
+    elif not state.get("approved"):
+        next_agent = "reviewer"
+
+    elif not state.get("evaluation_results"):
+        next_agent = "evaluator"
+
+    else:
+        next_agent = "done"
+
+    if state["review_iterations"] >= 3:
+        next_agent = "evaluator"
+
+    logger.info(
+        f"""
+======== SUPERVISOR ========
+
+Next Agent:
+{next_agent}
+
+Research Results:
+{len(state.get("research_results", []))}
+
+Raw Research Available:
+{bool(state.get("raw_research_context"))}
+
+Analysis Exists:
+{bool(state.get("analysis_results"))}
+
+Report Exists:
+{bool(state.get("report"))}
+
+Approved:
+{state.get("approved")}
+
+Evaluation Exists:
+{bool(state.get("evaluation_results"))}
+
+============================
+"""
+    )
 
     return {
-        "next_agent" : decision.next_agent
+        "next_agent": next_agent
     }

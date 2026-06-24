@@ -26,6 +26,9 @@ from app.agents.trends_researcher import (
 from app.agents.risks_researcher import (
     risks_researcher_node
 )
+from app.agents.research_collector import (
+    research_collector_node
+)
 
 from app.graph.research_router import (
     research_router
@@ -60,8 +63,10 @@ workflow.add_node(
     "risks_researcher",
     risks_researcher_node
 )
-
-
+workflow.add_node(
+    "research_collector",
+    research_collector_node
+)
 
 workflow.add_node(
     "supervisor" , 
@@ -103,11 +108,16 @@ workflow.add_edge(
     "initializer",
     "supervisor"
 )
+workflow.add_edge(
+    "research_collector",
+    "supervisor"
+)
 
 workflow.add_conditional_edges(
     "supervisor",
     supervisor_router,
     {
+        "research_collector": "research_collector",
         "planner": "planner",
         "analyst": "analyst",
         "writer": "writer",

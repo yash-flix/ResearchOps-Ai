@@ -1,7 +1,8 @@
-from app.llm.factory import get_llm
+from app.llm.factory import get_fast_llm
 from app.tools.web_search import web_search
+from app.config.logger import logger
 
-llm = get_llm()
+fast_llm = get_fast_llm()
 
 
 def facts_researcher_node(state):
@@ -10,23 +11,10 @@ def facts_researcher_node(state):
     """
 
     # Retrieve information from the web
-    search_results = web_search.invoke(
-        {"query": state["task"]}
-    )
-
-    #  Convert results into a clean context string
-    if isinstance(search_results, list):
-
-        context = "\n\n".join(
-            str(result)
-            for result in search_results
-        )
-
-    else:
-        context = str(search_results)
+    context = state["raw_research_context"]
 
    
-    summary = llm.invoke(
+    summary = fast_llm.invoke(
         f"""
         You are a factual research analyst.
 
@@ -59,7 +47,7 @@ def facts_researcher_node(state):
         """
     )
 
-
+    logger.info("FACTS RESEARCHER EXECUTED")
     return {
         "research_results": [
             f"FACTS RESEARCH\n\n{summary.content}"
