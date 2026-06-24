@@ -35,10 +35,14 @@ Focus on actionable insights.
 def analyst_node(
     state: GraphState
 ) -> dict:
+    
+    combined_research = "\n\n".join(
+    state["research_results"]
+     )
 
     prompt = build_analysis_prompt(
         task=state["task"],
-        research_results=state["research_results"]
+        research_results=combined_research
     )
 
     analysis = llm.invoke(prompt)

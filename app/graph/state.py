@@ -1,9 +1,10 @@
-from typing import TypedDict , Any , NotRequired
+from typing import TypedDict , Annotated, NotRequired
 from app.graph.evaluation_state import EvaluationState
+import operator
 
 class GraphState(TypedDict):
     task: str
-    research_results: str
+    research_results: Annotated[list , operator.add]
     analysis_results: str
     report: str
 

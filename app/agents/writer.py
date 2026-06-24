@@ -48,6 +48,7 @@ Requirements:
 """
 @traceable(name="writer")
 def writer_node(state:GraphState)->dict:
+    
     prompt = build_writer_prompt(
         task = state["task"],
         research_results=state["research_results"],
@@ -66,6 +67,8 @@ def writer_node(state:GraphState)->dict:
 
     return {
         "report" : result.content ,
+        "report_version":
+        state["report_version"] + 1,
         "token_usage": {
         **state["token_usage"],
         "writer": tokens
