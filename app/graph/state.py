@@ -4,7 +4,7 @@ import operator
 
 class GraphState(TypedDict):
     task: str
-    research_results: Annotated[list , operator.add]
+    research_results: Annotated[list[str] , operator.add]
     analysis_results: str
     report: str
 
@@ -18,8 +18,8 @@ class GraphState(TypedDict):
 
     execution_id: str
     started_at: str
-    finished_at: str
-    duration_seconds: float
+    finished_at: NotRequired[str]
+    duration_seconds: NotRequired[float]
 
     token_usage: dict
 

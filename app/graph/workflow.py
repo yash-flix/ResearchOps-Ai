@@ -13,6 +13,24 @@ from app.agents.reviewer import reviewer_node
 from app.agents.evaluator import evaluator_node 
 from app.agents.initializer import initializer_node
 
+#parallel search 
+from app.agents.research_planner import planner_node
+from app.agents.facts_researcher import (
+    facts_researcher_node
+)
+
+from app.agents.trends_researcher import (
+    trends_researcher_node
+)
+
+from app.agents.risks_researcher import (
+    risks_researcher_node
+)
+
+from app.graph.research_router import (
+    research_router
+)
+
 # Import routers 
 from app.graph.router import (
     supervisor_router
@@ -21,15 +39,36 @@ from app.graph.router import (
 workflow = StateGraph(GraphState)
 
 # required nodes in the workflow 
+
+#research nodes
+workflow.add_node(
+    "planner",
+    planner_node
+)
+
+workflow.add_node(
+    "facts_researcher",
+    facts_researcher_node
+)
+
+workflow.add_node(
+    "trends_researcher",
+    trends_researcher_node
+)
+
+workflow.add_node(
+    "risks_researcher",
+    risks_researcher_node
+)
+
+
+
 workflow.add_node(
     "supervisor" , 
     supervisor_node
 )
 
-workflow.add_node(
-    "web_researcher" ,
-    web_researcher_node
-)
+
 
 workflow.add_node(
     "analyst",
@@ -69,7 +108,7 @@ workflow.add_conditional_edges(
     "supervisor",
     supervisor_router,
     {
-        "web_researcher": "web_researcher",
+        "planner": "planner",
         "analyst": "analyst",
         "writer": "writer",
         "reviewer": "reviewer",
@@ -77,10 +116,18 @@ workflow.add_conditional_edges(
         "__end__": END
     }
 )
+workflow.add_conditional_edges(
+    "planner",
+    research_router
+)
 
 workflow.add_edge(
-    "web_researcher",
-    "supervisor"
+    [
+        "facts_researcher",
+        "trends_researcher",
+        "risks_researcher"
+    ],
+    "analyst"
 )
 
 workflow.add_edge(

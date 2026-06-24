@@ -4,7 +4,7 @@ from pydantic import BaseModel
 class SupervisorDecision(BaseModel):
 
     next_agent : Literal[  #restrict the orchestrator for only the given agents 
-        "web_researcher",
+        "planner",
         "analyst",
         "writer",
         "reviewer",

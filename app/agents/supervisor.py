@@ -36,7 +36,7 @@ Evaluation Available:
 
  Routing Rules:
 1. No research
-   → web_researcher
+   → planner
 
 2. Research exists but no analysis
    → analyst
